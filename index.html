@@ -1,23 +1,513 @@
-{
-  "short_name": "Paula's arte",
-  "name": "Paula's arte ✨",
-  "icons": [
-    {
-      "src": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgqH1RISYU4iQR7qXZbyPVBkh7hZzPxX2151qziAI5pvDPkXaQjng83RNnU7zlDmvHQCxHVmP_dudnaXsmN0-sa66i4XSBpy9o52Npe-STWHwe8zl5B1lXc37jJ5fQYyNOsv-bzNssZscqaxuDPVnhzY9uMoK2YHaoJBRkGQJMfCsz3OFBGnL7oEmbhZ1U/s1536/32624.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgqH1RISYU4iQR7qXZbyPVBkh7hZzPxX2151qziAI5pvDPkXaQjng83RNnU7zlDmvHQCxHVmP_dudnaXsmN0-sa66i4XSBpy9o52Npe-STWHwe8zl5B1lXc37jJ5fQYyNOsv-bzNssZscqaxuDPVnhzY9uMoK2YHaoJBRkGQJMfCsz3OFBGnL7oEmbhZ1U/s1536/32624.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ],
-  "start_url": ".",
-  "background_color": "#ffffff",
-  "theme_color": "#ffffff",
-  "display": "standalone",
-  "orientation": "portrait"
-}
-  
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paula's arte</title>
+    <style>
+        /* Estilos Gerais */
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fafafa;
+            color: #333;
+        }
+        header {
+            text-align: center;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .logo-container {
+            margin-bottom: 10px;
+        }
+        .logo-container img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            font-size: 24px;
+            margin: 10px 0 5px 0;
+            font-family: 'Georgia', serif;
+            color: #222;
+        }
+        
+        /* Barra de Pesquisa */
+        .search-container {
+            padding: 15px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .search-input {
+            width: 100%;
+            padding: 12px 20px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border 0.3s;
+        }
+        .search-input:focus {
+            border-color: #999;
+        }
+
+        /* Categorias */
+        .categories-container {
+            display: flex;
+            overflow-x: auto;
+            padding: 10px 15px;
+            gap: 10px;
+            max-width: 600px;
+            margin: 0 auto;
+            scrollbar-width: none;
+        }
+        .categories-container::-webkit-scrollbar {
+            display: none;
+        }
+        .category-btn {
+            background-color: #eee;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.3s, color 0.3s;
+        }
+        .category-btn.active {
+            background-color: #333;
+            color: #fff;
+        }
+
+        /* Lista de Produtos */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 15px;
+            padding: 15px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .product-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .product-img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            background-color: #f0f0f0;
+        }
+        .product-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin: 10px 0 5px 0;
+            height: 38px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+        .product-price {
+            font-size: 16px;
+            font-weight: bold;
+            color: #e27d60;
+            margin-bottom: 10px;
+        }
+        .add-to-cart-btn {
+            width: 100%;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        .add-to-cart-btn:hover {
+            background-color: #555;
+        }
+
+        /* Carrinho / Secção de Pedido */
+        .cart-section {
+            background-color: #fff;
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 -3px 15px rgba(0,0,0,0.1);
+            padding: 20px;
+            max-width: 600px;
+            margin: 30px auto 0 auto;
+        }
+        .cart-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .cart-item-info {
+            flex-grow: 1;
+        }
+        .cart-item-qty {
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        .cart-item-remove {
+            color: #ff4d4d;
+            cursor: pointer;
+            margin-left: 10px;
+            font-weight: bold;
+        }
+        .cart-total {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: right;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+        }
+
+        /* Formulário de Encomenda */
+        .order-form {
+            margin-top: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+        .submit-btn {
+            width: 100%;
+            background-color: #25D366;
+            color: #fff;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        .submit-btn:hover {
+            background-color: #128C7E;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 16px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Cabeçalho -->
+    <header>
+        <div class="logo-container">
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgqH1RISYU4iQR7qXZbyPVBkh7hZzPxX2151qziAI5pvDPkXaQjng83RNnU7zlDmvHQCxHVmP_dudnaXsmN0-sa66i4XSBpy9o52Npe-STWHwe8zl5B1lXc37jJ5fQYyNOsv-bzNssZscqaxuDPVnhzY9uMoK2YHaoJBRkGQJMfCsz3OFBGnL7oEmbhZ1U/s1536/32624.png" alt="Paula's arte">
+        </div>
+        <h1>Paula's arte ✨</h1>
+    </header>
+
+    <!-- Barra de Pesquisa -->
+    <div class="search-container">
+        <input type="text" id="searchInput" class="search-input" placeholder="Procurar em toda a loja...">
+    </div>
+
+    <!-- Categorias -->
+    <div class="categories-container" id="categoriesContainer">
+        <button class="category-btn active" onclick="filterCategory('Todos')">Todos</button>
+    </div>
+
+    <!-- Grelha de Produtos -->
+    <div id="loading" class="loading">A carregar os produtos...</div>
+    <div class="products-grid" id="productsGrid" style="display: none;"></div>
+
+    <!-- O Teu Pedido (Carrinho) -->
+    <div class="cart-section">
+        <div class="cart-title">
+            🛒 O Teu Pedido
+        </div>
+        <div id="cartEmptyMessage" style="color: #888;">O teu carrinho está vazio...</div>
+        <div id="cartItemsList"></div>
+        <div class="cart-total" id="cartTotalContainer" style="display: none;">
+            Total: <span id="cartTotal">0.00</span>€
+        </div>
+
+        <!-- Formulário para WhatsApp -->
+        <form class="order-form" onsubmit="sendOrder(event)">
+            <div class="form-group">
+                <input type="text" id="clientName" placeholder="Teu Nome Completo" required>
+            </div>
+            <div class="form-group">
+                <input type="tel" id="clientPhone" placeholder="Teu Telemóvel" required>
+            </div>
+            <div class="form-group">
+                <select id="shippingMethod" onchange="updateTotal()">
+                    <option value="Levantamento">Levantamento (Grátis)</option>
+                    <option value="Correio">Correio Normal (+2.00€)</option>
+                    <option value="Correio Registado">Correio Registado (+4.50€)</option>
+                </select>
+            </div>
+            <button type="submit" class="submit-btn">
+                Enviar Pedido por WhatsApp
+            </button>
+        </form>
+    </div>
+
+    <script>
+        // URL da API do Google Apps Script
+        const API = 'https://script.google.com/macros/s/AKfycbwaadAQH8bqSJlTZyPg0sIG5FKil3Q3TC5UsPIYO9a6oqji9ZIvh0YdxDFiJueCReX7Qg/exec';
+        
+        let allProducts = [];
+        let activeCategory = 'Todos';
+        let cart = {};
+
+        // 1. Carregar os produtos da API Google Sheets
+        async function loadProducts() {
+            try {
+                const response = await fetch(API);
+                allProducts = await response.json();
+                
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('productsGrid').style.display = 'grid';
+                
+                generateCategories();
+                renderProducts();
+            } catch (error) {
+                console.error("Erro ao carregar produtos:", error);
+                document.getElementById('loading').innerText = "Erro ao carregar os produtos. Por favor tenta atualizar a página.";
+            }
+        }
+
+        // 2. Gerar as Categorias dinamicamente baseadas no Sheets
+        function generateCategories() {
+            const categoriesContainer = document.getElementById('categoriesContainer');
+            const categories = new Set();
+            
+            allProducts.forEach(product => {
+                if(product.categoria) {
+                    categories.add(product.categoria.trim());
+                }
+            });
+
+            categories.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = 'category-btn';
+                btn.innerText = cat;
+                btn.onclick = () => filterCategory(cat, btn);
+                categoriesContainer.appendChild(btn);
+            });
+        }
+
+        // 3. Filtrar por Categoria
+        function filterCategory(category, buttonElement = null) {
+            activeCategory = category;
+            
+            // Atualizar botões ativos
+            const buttons = document.querySelectorAll('.category-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            if (buttonElement) {
+                buttonElement.classList.add('active');
+            } else {
+                buttons[0].classList.add('active');
+            }
+
+            renderProducts();
+        }
+
+        // 4. Mostrar os produtos no ecrã
+        function renderProducts() {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = '';
+            
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+
+            const filtered = allProducts.filter(p => {
+                const matchesCategory = (activeCategory === 'Todos' || p.categoria === activeCategory);
+                const matchesSearch = p.nome.toLowerCase().includes(searchQuery);
+                return matchesCategory && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #888; padding: 20px;">Nenhum produto encontrado.</div>';
+                return;
+            }
+
+            filtered.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                
+                // Formatar preço
+                const priceValue = parseFloat(p.preco) || 0;
+
+                card.innerHTML = `
+                    <div>
+                        <img src="${p.img || 'https://picsum.photos/200'}" class="product-img" alt="${p.nome}">
+                        <div class="product-title">${p.nome}</div>
+                    </div>
+                    <div>
+                        <div class="product-price">${priceValue.toFixed(2)}€</div>
+                        <button class="add-to-cart-btn" onclick="addToCart(${p.id}, '${p.nome.replace(/'/g, "\\'")}', ${priceValue})">Adicionar</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Event listener para a barra de pesquisa
+        document.getElementById('searchInput').addEventListener('input', renderProducts);
+
+        // 5. Funções do Carrinho
+        function addToCart(id, nome, preco) {
+            if (cart[id]) {
+                cart[id].qty += 1;
+            } else {
+                cart[id] = { nome, preco, qty: 1 };
+            }
+            updateCartUI();
+        }
+
+        function removeFromCart(id) {
+            delete cart[id];
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const list = document.getElementById('cartItemsList');
+            const emptyMsg = document.getElementById('cartEmptyMessage');
+            const totalContainer = document.getElementById('cartTotalContainer');
+            
+            list.innerHTML = '';
+            
+            const keys = Object.keys(cart);
+            if (keys.length === 0) {
+                emptyMsg.style.display = 'block';
+                totalContainer.style.display = 'none';
+                return;
+            }
+
+            emptyMsg.style.display = 'none';
+            totalContainer.style.display = 'block';
+
+            keys.forEach(id => {
+                const item = cart[id];
+                const itemEl = document.createElement('div');
+                itemEl.className = 'cart-item';
+                itemEl.innerHTML = `
+                    <div class="cart-item-info">
+                        <span class="cart-item-qty">${item.qty}x</span> ${item.nome}
+                    </div>
+                    <div>
+                        <span>${(item.preco * item.qty).toFixed(2)}€</span>
+                        <span class="cart-item-remove" onclick="removeFromCart(${id})">✕</span>
+                    </div>
+                `;
+                list.appendChild(itemEl);
+            });
+
+            updateTotal();
+        }
+
+        function updateTotal() {
+            let itemsTotal = 0;
+            Object.keys(cart).forEach(id => {
+                itemsTotal += cart[id].preco * cart[id].qty;
+            });
+
+            const shipping = document.getElementById('shippingMethod').value;
+            let shippingCost = 0;
+            if (shipping === 'Correio') shippingCost = 2.0;
+            if (shipping === 'Correio Registado') shippingCost = 4.5;
+
+            const finalTotal = itemsTotal + shippingCost;
+            document.getElementById('cartTotal').innerText = finalTotal.toFixed(2);
+        }
+
+        // 6. Enviar Pedido via WhatsApp
+        function sendOrder(event) {
+            event.preventDefault();
+
+            const keys = Object.keys(cart);
+            if (keys.length === 0) {
+                alert("O teu carrinho está vazio!");
+                return;
+            }
+
+            const name = document.getElementById('clientName').value;
+            const phone = document.getElementById('clientPhone').value;
+            const shipping = document.getElementById('shippingMethod').value;
+
+            let message = `*Novo Pedido - Paula's arte*\n\n`;
+            message += `*Cliente:* ${name}\n`;
+            message += `*Contacto:* ${phone}\n`;
+            message += `*Método:* ${shipping}\n\n`;
+            message += `*Artigos:*\n`;
+
+            let itemsTotal = 0;
+            keys.forEach(id => {
+                const item = cart[id];
+                const subtotal = item.preco * item.qty;
+                itemsTotal += subtotal;
+                message += `- ${item.qty}x ${item.nome} (${subtotal.toFixed(2)}€)\n`;
+            });
+
+            let shippingCost = 0;
+            if (shipping === 'Correio') shippingCost = 2.0;
+            if (shipping === 'Correio Registado') shippingCost = 4.5;
+
+            const finalTotal = itemsTotal + shippingCost;
+            message += `\n*Subtotal Artigos:* ${itemsTotal.toFixed(2)}€\n`;
+            if (shippingCost > 0) {
+                message += `*Portes de Envio:* ${shippingCost.toFixed(2)}€\n`;
+            }
+            message += `*Total Final:* ${finalTotal.toFixed(2)}€\n\n`;
+            message += `Por favor, confirma o meu pedido!`;
+
+            // Número de telemóvel para o WhatsApp
+            const storePhone = '351938671014'; 
+            const url = `https://api.whatsapp.com/send?phone=${storePhone}&text=${encodeURIComponent(message)}`;
+            
+            window.open(url, '_blank');
+        }
+
+        // Iniciar carregamento ao abrir a página
+        window.onload = loadProducts;
+    </script>
+</body>
+  </html>
