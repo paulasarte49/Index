@@ -10,7 +10,7 @@
 <meta property="og:title" content="Paula's arte ✨">
 <meta property="og:description" content="A tua loja favorita de artesanato e mimos feitos com amor. Espreita a nossa coleção!">
 <meta property="og:image" content="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj_WfWrS7-NmiNa3cHM1Yu7GraVdop0Tkr9d5fhijAZFnYxntWCYR5AN9xWN2un-XSQKaEHFvC8aYe5cvu18W9lqj_YsuoSyA0ET5_XDCq61ch-SC2XbejIYmeqevaLOnvV1GS9aFrx2UyirC061zv8zbg32vhHDHTt3TB6UC3gFxmGepRpQ6mfIH5khf4/s1024/32893.png">
-<meta property="og:url" content="https://paulasarte.github.io/">
+<meta property="og:url" content="https://paulasarte49.github.io/">
 
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgqH1RISYU4iQR7qXZbyPVBkh7hZzPxX2151qziAI5pvDPkXaQjng83RNnU7zlDmvHQCxHVmP_dudnaXsmN0-sa66i4XSBpy9o52Npe-STWHwe8zl5B1lXc37jJ5fQYyNOsv-bzNssZscqaxuDPVnhzY9uMoK2YHaoJBRkGQJMfCsz3OFBGnL7oEmbhZ1U/s1536/32624.png">
@@ -179,7 +179,7 @@ installButton.addEventListener('click', () => {
 
 window.onload = () => setTimeout(() => document.getElementById("splash").style.display = "none", 2000);
 
-const API = 'https://script.google.com/macros/s/AKfycbw7iXZ525CvJqAHfBR23OsiarAxrjFU_vaHA75JA7G2hjy9Xany3bvKNdkpNQP7Jch3/exec'; 
+const API = 'https://script.google.com/macros/s/AKfycbwaadAQH8bqSJlTZyPg0sIG5FKil3Q3TC5UsPIYO9a6oqji9ZIvh0YdxDFiJueCReX7Qg/exec'; 
 let db = [], cart = JSON.parse(localStorage.getItem("cart")) || [], favs = JSON.parse(localStorage.getItem("favs")) || [];
 let categoriaAtual = "", paginaAtual = 1;
 const itensPorPagina = 10;
@@ -266,7 +266,7 @@ function renderProdutos() {
         <div class="info">
           <h3 class="nome-clicavel" onclick="abrirSignificado('${p.nome}', '${p.significado.replace(/'/g, "\\'")}')">#${p.id} - ${p.nome} ℹ️</h3>
           ${precoHTML}
-          <button class="btn-add" onclick="add(${id})">Adicionar ao Pedido</button>
+          <button class="btn-add" onclick="add(${p.id})">Adicionar ao Pedido</button>
         </div>
       </div>`;
   }).join("");
@@ -351,4 +351,4 @@ function copiar(){
 }
 </script>
 </body>
-  </html>
+</html>
